@@ -1,16 +1,56 @@
-:host{
+:host {
     height: 100%;
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
-h1{
+h1 {
     width: 100%;
-    text-align: center;
-    height: 40px;
-    border: 1px solid   black;
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 1.5em;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-wine));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    border-bottom: 2px solid var(--glass-border);
+    margin-bottom: 15px;
 }
 
-.content{
-    height: 90%;
-    overflow: auto;
+.content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px;
+}
+
+.empty-queue {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: var(--text-secondary);
+    gap: 15px;
+}
+
+.empty-queue i {
+    font-size: 3em;
+    opacity: 0.5;
+}
+
+/* Animación para las canciones */
+.song-item {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }

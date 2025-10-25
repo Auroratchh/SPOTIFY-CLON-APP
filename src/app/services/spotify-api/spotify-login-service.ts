@@ -9,16 +9,15 @@ import { environment } from '../../../environments/environment.development';
 export class SpotifyLoginService {
   
   constructor(
-    private _http:HttpClient
-  ){  }
+    private _http: HttpClient
+  ) {}
 
   getAccessToken(): Observable<any> {
-
     const body = new HttpParams()
-      .set('grant_type','client_credentials')
-      .set('client_id',environment.CLIENT_ID)
-      .set('client_secret',environment.CLIENT_SECRET);
-
+      .set('grant_type', 'client_credentials')
+      .set('client_id', environment.CLIENT_ID)
+      .set('client_secret', environment.CLIENT_SECRET);
+      
     return this._http.post<any>(
       environment.AUTH_API_URL,
       body.toString(),
@@ -29,5 +28,4 @@ export class SpotifyLoginService {
       }
     );
   }
-
 }

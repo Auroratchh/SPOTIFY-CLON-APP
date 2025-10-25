@@ -1,5 +1,6 @@
 import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -12,6 +13,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 import { SecondaryModule } from './secondary/secondary-module';
+import { SearchBar } from './search/search-bar/search-bar';
+import { SearchSection } from './search/search-section/search-section';
 
 @NgModule({
   declarations: [
@@ -19,10 +22,13 @@ import { SecondaryModule } from './secondary/secondary-module';
     SongInfo,
     AudioController,
     Playlist,
-    Player
+    Player,
+    SearchBar,
+    SearchSection
   ],
   imports: [
     BrowserModule,
+    CommonModule,
     AppRoutingModule,
     SecondaryModule
   ],
