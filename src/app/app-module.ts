@@ -1,6 +1,7 @@
 import { NgModule, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
@@ -13,6 +14,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 import { SecondaryModule } from './secondary/secondary-module';
+
 import { SearchBar } from './search/search-bar/search-bar';
 import { SearchSection } from './search/search-section/search-section';
 
@@ -29,6 +31,7 @@ import { SearchSection } from './search/search-section/search-section';
   imports: [
     BrowserModule,
     CommonModule,
+    FormsModule,  // Para usar ngModel
     AppRoutingModule,
     SecondaryModule
   ],

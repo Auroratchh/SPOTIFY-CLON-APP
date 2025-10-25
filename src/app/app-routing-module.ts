@@ -5,23 +5,27 @@ import { StaticContainer } from './secondary/static-container/static-container';
 import { HomeChild } from './secondary/home-child/home-child';
 import { FirstChild } from './secondary/first-child/first-child';
 import { SecondChild } from './secondary/second-child/second-child';
+import { SearchSection } from './search/search-section/search-section';
 
 const routes: Routes = [
-
   {
-    path:'',
+    path: '',
     component: Player
   },
   {
-    path:'secondary',
+    path: 'search',
+    component: SearchSection
+  },
+  {
+    path: 'secondary',
     component: StaticContainer,
-    children:[
+    children: [
       {
-        path:'',
-        component:HomeChild
+        path: '',
+        component: HomeChild
       },
       {
-        path:'first',
+        path: 'first',
         component: FirstChild
       },
       {
