@@ -1,1 +1,105 @@
-<p>search-section works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" 
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+</head>
+<body>
+    <div class="search-page">
+    
+    <div class="search-header">
+        <a routerLink="/" class="back-btn">
+            <i class="fa-solid fa-arrow-left"></i> Volver
+        </a>
+        <h1>
+            <i class="fa-solid fa-magnifying-glass"></i> Buscar Música
+        </h1>
+    </div>
+
+    <app-search-bar (searchQuery)="onSearch($event)"></app-search-bar>
+
+    @if (isLoading) {
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Buscando en Spotify...</p>
+        </div>
+    }
+
+    @if (searchResults && !isLoading) {
+        <div class="results-container">
+   
+            @if (searchResults.tracks?.items?.length > 0) {
+                <div class="results-section glass-effect">
+                    <h2>
+                        <i class="fa-solid fa-music"></i> Canciones
+                    </h2>
+                    <div class="tracks-grid">
+                        @for(track of searchResults.tracks.items; track track.id) {
+                            <div class="track-card glass-effect hover-scale" (click)="playTrack(track)">
+                                @if (track.album?.images && track.album.images.length > 0) {
+                                    <img [src]="track.album.images[0]?.url" [alt]="track.name" class="track-image">
+                                } @else {
+                                    <div class="track-image track-no-image">
+                                        <i class="fa-solid fa-music"></i>
+                                    </div>
+                                }
+                                <div class="track-info">
+                                    <h3 class="track-name">{{ track.name }}</h3>
+                                    <p class="track-artist">{{ track.artists[0]?.name }}</p>
+                                </div>
+                                <button class="play-btn">
+                                    <i class="fa-solid fa-play"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+      
+            @if (searchResults.albums?.items?.length > 0) {
+                <div class="results-section glass-effect">
+                    <h2>
+                        <i class="fa-solid fa-compact-disc"></i> Álbumes
+                    </h2>
+                    <div class="albums-grid">
+                        @for(album of searchResults.albums.items; track album.id) {
+                            <div class="album-card glass-effect hover-scale" (click)="playAlbum(album)">
+                                @if (album.images && album.images.length > 0) {
+                                    <img [src]="album.images[0]?.url" [alt]="album.name" class="album-image">
+                                } @else {
+                                    <div class="album-image album-no-image">
+                                        <i class="fa-solid fa-compact-disc"></i>
+                                    </div>
+                                }
+                                <h3 class="album-name">{{ album.name }}</h3>
+                                <p class="album-artist">{{ album.artists[0]?.name }}</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+
+    @if (!hasSearched && !isLoading) {
+        <div class="empty-state">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h2>Busca tu música favorita</h2>
+            <p>Encuentra canciones, álbumes y artistas en Spotify</p>
+        </div>
+    }
+
+    @if (hasSearched && !isLoading && searchResults?.tracks?.items?.length === 0) {
+        <div class="empty-state">
+            <i class="fa-solid fa-face-frown"></i>
+            <h2>No se encontraron resultados</h2>
+            <p>Intenta con otros términos de búsqueda</p>
+        </div>
+    }
+</div>
+</body>
+</html>

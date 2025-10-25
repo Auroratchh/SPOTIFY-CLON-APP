@@ -1,25 +1,199 @@
-:host{
+:host {
     width: 100%;
-    height: 100px;
-    margin-top: 15px;
+    padding: 20px 40px;
+    margin-top: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    gap: 20px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--glass-border);
 }
 
-#control-bar{
-    width: 70%;
-}
-
-.player-buttons{
-    width: 50%;
-    height: 100%;
+.progress-container {
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    gap: 15px;
+    width: 100%;
 }
 
-.player-buttons span i{
-    font-size: 2em;
+.time-label {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    min-width: 45px;
+    text-align: center;
+}
+
+#control-bar {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--bg-secondary);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#control-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-wine-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#control-bar::-webkit-slider-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 10px var(--accent-wine-light);
+}
+
+#control-bar::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--accent-wine-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#control-bar::-moz-range-thumb:hover {
+    transform: scale(1.3);
+    box-shadow: 0 0 10px var(--accent-wine-light);
+}
+
+.controls-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.player-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    flex: 1;
+}
+
+.player-buttons span {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+}
+
+.player-buttons span:hover {
+    color: var(--accent-wine-light);
+    transform: scale(1.1);
+}
+
+.player-buttons span.play {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, var(--accent-wine-dark), var(--accent-wine-light));
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 8px 20px rgba(139, 21, 56, 0.4);
+}
+
+.player-buttons span.play:hover {
+    transform: scale(1.15);
+    box-shadow: 0 10px 30px rgba(139, 21, 56, 0.6);
+}
+
+.player-buttons span.play i {
+    color: var(--text-primary);
+}
+
+.player-buttons span:not(.play) i {
+    font-size: 1.5em;
+}
+
+.player-buttons span.play i {
+    font-size: 1.8em;
+}
+
+
+.volume-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 200px;
+}
+
+.volume-control i {
+    color: var(--accent-wine-light);
+    font-size: 1.3em;
+}
+
+#volume-bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--bg-secondary);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#volume-bar::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-wine-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#volume-bar::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 8px var(--accent-wine-light);
+}
+
+#volume-bar::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-wine-light);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#volume-bar::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 8px var(--accent-wine-light);
+}
+
+
+.shuffle.active i,
+.repeat.active i {
+    color: var(--accent-wine-light);
+}
+
+@media (max-width: 768px) {
+    :host {
+        padding: 15px 20px;
+    }
+    
+    .volume-control {
+        min-width: 150px;
+    }
+    
+    .player-buttons {
+        gap: 15px;
+    }
+    
+    .player-buttons span.play {
+        width: 50px;
+        height: 50px;
+    }
 }

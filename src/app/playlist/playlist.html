@@ -1,10 +1,21 @@
 <h1>
-    Queue
+    <i class="fa-solid fa-list-music"></i>
+    Lista de reproducción
 </h1>
 <div class="content">
-    @for(song of playlist(); track song.id){
-        <app-song-info [song]="song" [cover]="cover()" displayMode="card"></app-song-info>
+    @for(song of playlist(); track song.id) {
+        <div class="song-item" (click)="onTrackClick(song)">
+            <app-song-info 
+                [song]="song" 
+                [cover]="getTrackCover(song)" 
+                displayMode="card">
+            </app-song-info>
+        </div>
     } @empty {
-        
+        <div class="empty-queue">
+            <i class="fa-solid fa-music"></i>
+            <h3>Sin canciones</h3>
+            <p>Busca música para empezar a escuchar</p>
+        </div>
     }
 </div>

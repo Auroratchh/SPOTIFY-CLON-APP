@@ -1,13 +1,56 @@
-<audio controls hidden></audio>
-<input type="range" id="control-bar">
-<div class="player-buttons">
-    <span class="back">
-        <i class="fa-solid fa-backward-step"></i>
-    </span>
-    <span class="play">
-        <i class="fa-solid fa-play"></i>
-    </span>
-    <span class="next">
-        <i class="fa-solid fa-forward-step"></i>
-    </span>
+<audio #audioPlayer hidden></audio>
+
+<div class="progress-container">
+    <span class="time-label">{{ currentTime }}</span>
+    <input 
+        type="range" 
+        id="control-bar" 
+        #controlBar
+        min="0" 
+        max="100" 
+        value="0"
+        (input)="seekTo($event)">
+    <span class="time-label">{{ duration }}</span>
+</div>
+
+<div class="controls-wrapper">
+
+    <div class="player-buttons">
+        <span class="back" title="Anterior" (click)="playPrevious()">
+            <i class="fa-solid fa-backward-step"></i>
+        </span>
+        <span class="play" title="Reproducir/Pausar" (click)="togglePlay()">
+            <i class="fa-solid" [class.fa-play]="!isPlaying" [class.fa-pause]="isPlaying"></i>
+        </span>
+        <span class="next" title="Siguiente" (click)="playNext()">
+            <i class="fa-solid fa-forward-step"></i>
+        </span>
+        <span 
+            class="shuffle" 
+            [class.active]="isShuffle"
+            title="Aleatorio" 
+            (click)="toggleShuffle()">
+            <i class="fa-solid fa-shuffle"></i>
+        </span>
+        <span 
+            class="repeat" 
+            [class.active]="repeatMode !== 'off'"
+            title="Repetir" 
+            (click)="toggleRepeat()">
+            <i class="fa-solid" 
+               [class.fa-repeat]="repeatMode !== 'one'"
+               [class.fa-repeat-1]="repeatMode === 'one'"></i>
+        </span>
+    </div>
+
+    <div class="volume-control">
+        <i class="fa-solid fa-volume-high"></i>
+        <input 
+            type="range" 
+            id="volume-bar" 
+            min="0" 
+            max="100" 
+            [value]="volume" 
+            (input)="changeVolume($event)">
+    </div>
 </div>

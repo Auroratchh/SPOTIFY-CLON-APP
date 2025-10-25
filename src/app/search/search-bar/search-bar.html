@@ -1,1 +1,20 @@
-<p>search-bar works!</p>
+
+<div class="search-container glass-effect">
+    <div class="search-input-wrapper">
+        <i class="fa-solid fa-search search-icon"></i>
+        <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Buscar canciones, álbumes o artistas..."
+            [(ngModel)]="searchText"
+            (keyup)="onEnter($event)"
+        >
+        <button 
+            class="search-btn"
+            (click)="onSearch()"
+            [disabled]="!searchText.trim()"
+        >
+            <i class="fa-solid fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
