@@ -37,7 +37,7 @@ export class SearchSection {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error en búsqueda:', error);
+        console.error('Error en bÃºsqueda:', error);
         this.isLoading = false;
         this.searchResults = null;
       }
@@ -96,7 +96,7 @@ export class SearchSection {
       convertedTrack, 
       cover, 
       playlist, 
-      `${track.artists[0]?.name || 'Artista'} - ${track.album?.name || 'Álbum'}`
+      `${track.artists[0]?.name || 'Artista'} - ${track.album?.name || 'Ãlbum'}`
     );
 
  
@@ -104,6 +104,6 @@ export class SearchSection {
   }
 
   playAlbum(album: any) {
-    console.log('Reproducir álbum:', album.name);
+    console.log('Reproducir Ã¡lbum:', album.name);
   }
 }

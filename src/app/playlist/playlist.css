@@ -4,11 +4,12 @@
     display: flex;
     flex-direction: column;
     padding: 20px;
-    overflow-y: auto;
     background: var(--glass-bg);
     backdrop-filter: blur(10px);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
+    overflow: hidden; /* Importante para controlar el scroll interno */
+    min-height: 0; /* Permite que el flex funcione correctamente */
 }
 
 h1 {
@@ -19,6 +20,7 @@ h1 {
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-shrink: 0; /* No se comprime */
 }
 
 h1 i {
@@ -30,9 +32,13 @@ h1 i {
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 10px;
+    flex: 1; /* Toma todo el espacio disponible */
+    min-height: 0; /* Permite que el scroll funcione */
 }
 
+/* Estilos del scrollbar */
 .content::-webkit-scrollbar {
     width: 8px;
 }
@@ -51,14 +57,27 @@ h1 i {
     background: var(--accent-wine-dark);
 }
 
+/* Firefox */
+.content {
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-wine-light) var(--bg-secondary);
+}
+
 .song-item {
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 12px;
+    flex-shrink: 0; /* No se comprime */
 }
 
 .song-item:hover {
     transform: translateX(5px);
+}
+
+/* Destacar la canciÃ³n actual */
+.song-item.current-track {
+    border: 2px solid var(--accent-wine-light);
+    background: var(--hover-overlay);
 }
 
 .empty-queue {
@@ -69,6 +88,7 @@ h1 i {
     padding: 60px 20px;
     text-align: center;
     gap: 15px;
+    flex: 1;
 }
 
 .empty-queue i {
@@ -88,6 +108,11 @@ h1 i {
     color: var(--text-secondary);
 }
 
+@media (max-width: 1024px) {
+    :host {
+        max-height: 500px; /* Limitar altura en tablets */
+    }
+}
 
 @media (max-width: 768px) {
     :host {

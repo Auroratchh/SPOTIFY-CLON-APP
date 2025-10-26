@@ -32,15 +32,36 @@ export class MusicPlayerService {
 
   constructor() {}
 
-
+  /**
+   * FUNCIÃ“N MEJORADA: Ahora reordena la playlist correctamente
+   */
   setCurrentTrack(track: Track, cover: Image, playlist: Track[], albumName?: string) {
- 
+    // Guardar playlist original
     this.originalPlaylist = [...playlist];
+    
+    // Encontrar el Ã­ndice de la canciÃ³n seleccionada
+    const selectedIndex = playlist.findIndex(t => t.id === track.id);
+    
+    // Reordenar la playlist: la canciÃ³n seleccionada va primero, luego las siguientes
+    let reorderedPlaylist: Track[];
+    
+    if (selectedIndex !== -1) {
+      // Crear nueva playlist empezando desde la canciÃ³n seleccionada
+      reorderedPlaylist = [
+        ...playlist.slice(selectedIndex),  // Desde la seleccionada hasta el final
+        ...playlist.slice(0, selectedIndex) // Desde el inicio hasta antes de la seleccionada
+      ];
+    } else {
+      reorderedPlaylist = [...playlist];
+    }
+
+    // Si shuffle estÃ¡ activo, usar la playlist mezclada
+    const finalPlaylist = this.isShuffleSubject.value ? this.shuffledPlaylist : reorderedPlaylist;
     
     const playback: CurrentPlayback = {
       track,
       cover,
-      playlist: this.isShuffleSubject.value ? this.shuffledPlaylist : playlist,
+      playlist: finalPlaylist,
       albumName
     };
     
@@ -48,11 +69,9 @@ export class MusicPlayerService {
     this.isPlayingSubject.next(true);
   }
 
-
   getCurrentPlayback(): CurrentPlayback | null {
     return this.currentPlaybackSubject.value;
   }
-
 
   togglePlay() {
     this.isPlayingSubject.next(!this.isPlayingSubject.value);
@@ -66,18 +85,21 @@ export class MusicPlayerService {
     if (!current) return;
 
     if (newShuffleState) {
- 
-      this.shuffledPlaylist = this.shuffleArray([...this.originalPlaylist]);
-  
-      const currentIndex = this.shuffledPlaylist.findIndex(t => t.id === current.track.id);
-      if (currentIndex > 0) {
-        const [currentTrack] = this.shuffledPlaylist.splice(currentIndex, 1);
-        this.shuffledPlaylist.unshift(currentTrack);
-      }
+      // Crear playlist mezclada excluyendo la canciÃ³n actual
+      const otherTracks = this.originalPlaylist.filter(t => t.id !== current.track.id);
+      this.shuffledPlaylist = [current.track, ...this.shuffleArray(otherTracks)];
       current.playlist = this.shuffledPlaylist;
     } else {
-     
-      current.playlist = this.originalPlaylist;
+      // Volver a la playlist original reordenada desde la canciÃ³n actual
+      const currentIndex = this.originalPlaylist.findIndex(t => t.id === current.track.id);
+      if (currentIndex !== -1) {
+        current.playlist = [
+          ...this.originalPlaylist.slice(currentIndex),
+          ...this.originalPlaylist.slice(0, currentIndex)
+        ];
+      } else {
+        current.playlist = this.originalPlaylist;
+      }
     }
 
     this.currentPlaybackSubject.next({...current});
@@ -105,20 +127,20 @@ export class MusicPlayerService {
     const repeatMode = this.repeatModeSubject.value;
     
     if (repeatMode === 'one') {
+      // Reiniciar la misma canciÃ³n
       this.isPlayingSubject.next(false);
       setTimeout(() => this.isPlayingSubject.next(true), 50);
       return;
     }
 
-    const currentIndex = current.playlist.findIndex(t => t.id === current.track.id);
-    
-    if (currentIndex < current.playlist.length - 1) {
-
-      const nextTrack = current.playlist[currentIndex + 1];
+    // La canciÃ³n actual siempre es la primera en la playlist reordenada
+    if (current.playlist.length > 1) {
+      // Siguiente canciÃ³n (Ã­ndice 1)
+      const nextTrack = current.playlist[1];
       const nextCover = nextTrack.albumImage || current.cover;
       this.setCurrentTrack(nextTrack, nextCover, current.playlist, current.albumName);
-    } else if (repeatMode === 'all') {
-
+    } else if (repeatMode === 'all' && current.playlist.length > 0) {
+      // Si solo hay una canciÃ³n y repeat all estÃ¡ activo, repetirla
       const firstTrack = current.playlist[0];
       const firstCover = firstTrack.albumImage || current.cover;
       this.setCurrentTrack(firstTrack, firstCover, current.playlist, current.albumName);
@@ -127,13 +149,21 @@ export class MusicPlayerService {
 
   playPrevious() {
     const current = this.currentPlaybackSubject.value;
-    if (!current) return;
+    if (!current || current.playlist.length === 0) return;
 
-    const currentIndex = current.playlist.findIndex(t => t.id === current.track.id);
-    if (currentIndex > 0) {
-      const prevTrack = current.playlist[currentIndex - 1];
+    // Buscar la canciÃ³n actual en la playlist original
+    const currentIndexInOriginal = this.originalPlaylist.findIndex(t => t.id === current.track.id);
+    
+    if (currentIndexInOriginal > 0) {
+      // Ir a la canciÃ³n anterior en la lista original
+      const prevTrack = this.originalPlaylist[currentIndexInOriginal - 1];
       const prevCover = prevTrack.albumImage || current.cover;
-      this.setCurrentTrack(prevTrack, prevCover, current.playlist, current.albumName);
+      this.setCurrentTrack(prevTrack, prevCover, this.originalPlaylist, current.albumName);
+    } else if (currentIndexInOriginal === 0) {
+      // Si estamos en la primera, ir a la Ãºltima (comportamiento circular)
+      const lastTrack = this.originalPlaylist[this.originalPlaylist.length - 1];
+      const lastCover = lastTrack.albumImage || current.cover;
+      this.setCurrentTrack(lastTrack, lastCover, this.originalPlaylist, current.albumName);
     }
   }
 

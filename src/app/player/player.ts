@@ -11,27 +11,27 @@ import { Subscription } from 'rxjs';
   styleUrl: './player.css'
 })
 export class Player implements OnInit, OnDestroy {
-
-  currentTrack: Track | undefined;
-  currentCover: Image | undefined;
+  
+  currentTrack?: Track;
+  currentCover?: Image;
   playlist: Track[] = [];
-  albumName: string = '';
   
   private playbackSubscription?: Subscription;
 
-  constructor(
-    private _musicPlayer: MusicPlayerService
-  ) {}
+  constructor(private _musicPlayer: MusicPlayerService) {}
 
   ngOnInit(): void {
-
     this.playbackSubscription = this._musicPlayer.currentPlayback$.subscribe(playback => {
       if (playback) {
+        console.log('📻 Playback recibido:', playback);
         this.currentTrack = playback.track;
-
-        this.currentCover = playback.track.albumImage || playback.cover;
+        this.currentCover = playback.cover;
         this.playlist = playback.playlist;
-        this.albumName = playback.albumName || 'Playlist';
+        
+        // ✅ DEBUG: Imprime valores
+        console.log('Track:', this.currentTrack?.name);
+        console.log('Cover:', this.currentCover?.url);
+        console.log('Playlist length:', this.playlist.length);
       }
     });
   }
@@ -40,15 +40,10 @@ export class Player implements OnInit, OnDestroy {
     this.playbackSubscription?.unsubscribe();
   }
 
-
   onTrackClick(track: Track): void {
-
-    const trackCover: Image = track.albumImage || this.currentCover || {
-      width: 640,
-      heigth: 640,
-      url: ''
-    };
-    
-    this._musicPlayer.setCurrentTrack(track, trackCover, this.playlist, this.albumName);
+    if (this.currentCover && this.playlist.length > 0) {
+      const trackCover = track.albumImage || this.currentCover;
+      this._musicPlayer.setCurrentTrack(track, trackCover, this.playlist);
+    }
   }
 }

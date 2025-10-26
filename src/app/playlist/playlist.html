@@ -4,7 +4,10 @@
 </h1>
 <div class="content">
     @for(song of playlist(); track song.id) {
-        <div class="song-item" (click)="onTrackClick(song)">
+        <div 
+            class="song-item" 
+            [class.current-track]="isCurrentTrack(song)"
+            (click)="onTrackClick(song)">
             <app-song-info 
                 [song]="song" 
                 [cover]="getTrackCover(song)" 

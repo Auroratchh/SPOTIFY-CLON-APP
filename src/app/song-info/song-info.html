@@ -1,4 +1,7 @@
-<img src="{{cover()?.url}}" alt="" class="card-song-img">
+<img [src]="cover()?.url || ''" 
+     alt="Song cover" 
+     class="card-song-img"
+     style="max-width: 240px !important; width: 80% !important; height: auto !important;">
 <div class="card-song-details">
     <h1 class="card-song-title">{{song()?.name}}</h1>
     <h3 class="card-song-artist">{{song()?.artists?.at(0)?.name}}</h3>

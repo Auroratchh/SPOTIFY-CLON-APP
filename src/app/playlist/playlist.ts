@@ -12,6 +12,7 @@ export class Playlist {
 
   playlist = input.required<Track[] | undefined>();
   cover = input.required<Image | undefined>();
+  currentTrack = input<Track | undefined>(); // Nuevo: recibir la canciÃ³n actual
 
   trackSelected = output<Track>();
 
@@ -20,11 +21,15 @@ export class Playlist {
   }
 
   getTrackCover(track: Track): Image | undefined {
-  
     if (track.albumImage) {
       return track.albumImage;
     }
-    
     return this.cover();
+  }
+
+  // Nuevo: verificar si es la canciÃ³n actual
+  isCurrentTrack(track: Track): boolean {
+    const current = this.currentTrack();
+    return current ? current.id === track.id : false;
   }
 }
