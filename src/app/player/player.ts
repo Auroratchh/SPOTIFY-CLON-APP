@@ -23,15 +23,13 @@ export class Player implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.playbackSubscription = this._musicPlayer.currentPlayback$.subscribe(playback => {
       if (playback) {
-        console.log('📻 Playback recibido:', playback);
+        console.log('Playback recibido:', playback.track.name);
         this.currentTrack = playback.track;
         this.currentCover = playback.cover;
         this.playlist = playback.playlist;
         
-        // ✅ DEBUG: Imprime valores
-        console.log('Track:', this.currentTrack?.name);
-        console.log('Cover:', this.currentCover?.url);
         console.log('Playlist length:', this.playlist.length);
+        console.log('Track actual:', this.currentTrack?.name);
       }
     });
   }
@@ -41,9 +39,15 @@ export class Player implements OnInit, OnDestroy {
   }
 
   onTrackClick(track: Track): void {
-    if (this.currentCover && this.playlist.length > 0) {
-      const trackCover = track.albumImage || this.currentCover;
-      this._musicPlayer.setCurrentTrack(track, trackCover, this.playlist);
+    console.log('Click en canción:', track.name);
+    
+    if (!this.currentCover || this.playlist.length === 0) {
+      console.warn('No hay cover o playlist');
+      return;
     }
+
+    const trackCover = track.albumImage || this.currentCover;
+    
+    this._musicPlayer.setCurrentTrack(track, trackCover, this.playlist);
   }
 }

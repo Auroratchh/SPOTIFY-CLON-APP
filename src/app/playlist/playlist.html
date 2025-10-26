@@ -3,7 +3,7 @@
     Lista de reproducción
 </h1>
 <div class="content">
-    @for(song of playlist(); track song.id) {
+    @for(song of rotatedPlaylist(); track song.id) {
         <div 
             class="song-item" 
             [class.current-track]="isCurrentTrack(song)"

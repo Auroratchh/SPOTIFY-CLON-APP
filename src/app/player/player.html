@@ -1,17 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" 
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
-    <div class="player-wrapper">
+
+<div class="player-wrapper">
     <div class="player-header">
-        <h1 class="app-title">
-            FEATHER
-        </h1>
+        <h1 class="app-title">FEATHER</h1>
         <a routerLink="/search" class="search-link glass-effect">
             <i class="fa-solid fa-magnifying-glass"></i>
             Buscar
@@ -20,18 +14,26 @@
 
     @if (currentTrack && currentCover) {
         <div id="main">
-            <app-song-info 
-                [song]="currentTrack" 
-                [cover]="currentCover" 
-                displayMode="main">
-            </app-song-info>
-            <app-playlist 
-                [playlist]="playlist" 
-                [cover]="currentCover"
-                (trackSelected)="onTrackClick($event)">
-            </app-playlist>
+            
+            <div class="main-song-container">
+                <app-song-info 
+                    [song]="currentTrack" 
+                    [cover]="currentCover" 
+                    displayMode="main">
+                </app-song-info>
+                
+                <app-audio-controller></app-audio-controller>
+            </div>
+
+            <div class="playlist-container">
+                <app-playlist 
+                    [playlist]="playlist" 
+                    [cover]="currentCover"
+                    [currentTrack]="currentTrack"
+                    (trackSelected)="onTrackClick($event)">
+                </app-playlist>
+            </div>
         </div>
-        <app-audio-controller></app-audio-controller>
     } @else {
         <div class="empty-player-state">
             <div class="empty-content glass-effect">
@@ -39,12 +41,9 @@
                 <h2>¡Bienvenido a Feather!</h2>
                 <p>Busca tu música favorita para empezar a escuchar</p>
                 <a routerLink="/search" class="start-search-btn">
-                    
                     Buscar Música
                 </a>
             </div>
         </div>
     }
 </div>
-</body>
-</html>

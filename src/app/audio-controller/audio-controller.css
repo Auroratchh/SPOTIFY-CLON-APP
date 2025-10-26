@@ -1,68 +1,67 @@
 :host {
     width: 100%;
-    padding: 20px 40px;
-    margin-top: 20px;
+    padding: 20px 0 0 0;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    background: var(--glass-bg);
-    backdrop-filter: blur(10px);
-    border-top: 1px solid var(--glass-border);
+    gap: 15px;
+    background: transparent;
+    backdrop-filter: none;
+    border-top: none;
 }
 
 .progress-container {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px;
     width: 100%;
 }
 
 .time-label {
     color: var(--text-secondary);
-    font-size: 0.9em;
-    min-width: 45px;
+    font-size: 0.8em;
+    min-width: 35px;
     text-align: center;
+    font-variant-numeric: tabular-nums;
 }
 
 #control-bar {
     flex: 1;
-    height: 6px;
-    border-radius: 3px;
-    background: var(--bg-secondary);
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.1);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    cursor: pointer;
 }
 
 #control-bar::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--accent-wine-light);
+    background: var(--text-primary);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-#control-bar::-webkit-slider-thumb:hover {
-    transform: scale(1.3);
-    box-shadow: 0 0 10px var(--accent-wine-light);
+#control-bar:hover::-webkit-slider-thumb {
+    transform: scale(1.2);
 }
 
 #control-bar::-moz-range-thumb {
-    width: 16px;
-    height: 16px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: var(--accent-wine-light);
+    background: var(--text-primary);
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-#control-bar::-moz-range-thumb:hover {
-    transform: scale(1.3);
-    box-shadow: 0 0 10px var(--accent-wine-light);
+#control-bar:hover::-moz-range-thumb {
+    transform: scale(1.2);
 }
 
 .controls-wrapper {
@@ -76,116 +75,112 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 25px;
+    gap: 20px;
     flex: 1;
 }
 
 .player-buttons span {
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     color: var(--text-primary);
+    opacity: 0.7;
 }
 
 .player-buttons span:hover {
-    color: var(--accent-wine-light);
-    transform: scale(1.1);
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.player-buttons span i {
+    font-size: 1.2em;
 }
 
 .player-buttons span.play {
-    width: 60px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--accent-wine-dark), var(--accent-wine-light));
+    width: 40px;
+    height: 40px;
+    background: var(--text-primary);
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    box-shadow: 0 8px 20px rgba(139, 21, 56, 0.4);
+    opacity: 1;
 }
 
 .player-buttons span.play:hover {
-    transform: scale(1.15);
-    box-shadow: 0 10px 30px rgba(139, 21, 56, 0.6);
+    transform: scale(1.08);
 }
 
 .player-buttons span.play i {
-    color: var(--text-primary);
+    color: var(--bg-primary);
+    font-size: 1.15em;
 }
 
-.player-buttons span:not(.play) i {
-    font-size: 1.5em;
+.shuffle.active,
+.repeat.active {
+    color: var(--accent-wine-light);
+    opacity: 1;
 }
-
-.player-buttons span.play i {
-    font-size: 1.8em;
-}
-
 
 .volume-control {
     display: flex;
     align-items: center;
-    gap: 12px;
-    min-width: 200px;
+    gap: 10px;
+    min-width: 140px;
 }
 
 .volume-control i {
-    color: var(--accent-wine-light);
-    font-size: 1.3em;
+    color: var(--text-primary);
+    font-size: 1.1em;
+    opacity: 0.7;
 }
 
 #volume-bar {
     flex: 1;
     height: 4px;
     border-radius: 2px;
-    background: var(--bg-secondary);
+    background: rgba(255, 255, 255, 0.1);
     outline: none;
     -webkit-appearance: none;
     appearance: none;
+    cursor: pointer;
 }
 
 #volume-bar::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--accent-wine-light);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-#volume-bar::-webkit-slider-thumb:hover {
+#volume-bar:hover::-webkit-slider-thumb {
     transform: scale(1.2);
-    box-shadow: 0 0 8px var(--accent-wine-light);
 }
 
 #volume-bar::-moz-range-thumb {
-    width: 14px;
-    height: 14px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     background: var(--accent-wine-light);
     border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
-#volume-bar::-moz-range-thumb:hover {
+#volume-bar:hover::-moz-range-thumb {
     transform: scale(1.2);
-    box-shadow: 0 0 8px var(--accent-wine-light);
-}
-
-
-.shuffle.active i,
-.repeat.active i {
-    color: var(--accent-wine-light);
 }
 
 @media (max-width: 768px) {
     :host {
-        padding: 15px 20px;
+        padding: 15px 20px 20px 20px;
     }
     
     .volume-control {
-        min-width: 150px;
+        min-width: 120px;
     }
     
     .player-buttons {
@@ -193,7 +188,7 @@
     }
     
     .player-buttons span.play {
-        width: 50px;
-        height: 50px;
+        width: 36px;
+        height: 36px;
     }
 }

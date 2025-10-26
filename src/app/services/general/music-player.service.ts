@@ -28,40 +28,35 @@ export class MusicPlayerService {
   public repeatMode$: Observable<'off' | 'all' | 'one'> = this.repeatModeSubject.asObservable();
 
   private originalPlaylist: Track[] = [];
-  private shuffledPlaylist: Track[] = [];
+  private currentOrderPlaylist: Track[] = [];
 
   constructor() {}
 
-  /**
-   * FUNCIÃ“N MEJORADA: Ahora reordena la playlist correctamente
-   */
   setCurrentTrack(track: Track, cover: Image, playlist: Track[], albumName?: string) {
-    // Guardar playlist original
-    this.originalPlaylist = [...playlist];
+    const uniquePlaylist = this.removeDuplicates(playlist);
     
-    // Encontrar el Ã­ndice de la canciÃ³n seleccionada
-    const selectedIndex = playlist.findIndex(t => t.id === track.id);
+   
+    const isNewPlaylist = this.isPlaylistDifferent(uniquePlaylist);
     
-    // Reordenar la playlist: la canciÃ³n seleccionada va primero, luego las siguientes
-    let reorderedPlaylist: Track[];
+    if (isNewPlaylist) {
+      console.log('Nueva playlist detectada - reemplazando completamente');
+      this.originalPlaylist = [...uniquePlaylist];
+      
     
-    if (selectedIndex !== -1) {
-      // Crear nueva playlist empezando desde la canciÃ³n seleccionada
-      reorderedPlaylist = [
-        ...playlist.slice(selectedIndex),  // Desde la seleccionada hasta el final
-        ...playlist.slice(0, selectedIndex) // Desde el inicio hasta antes de la seleccionada
-      ];
+      if (this.isShuffleSubject.value) {
+        this.currentOrderPlaylist = this.generateShuffledOrder(track, this.originalPlaylist);
+      } else {
+        this.currentOrderPlaylist = [...this.originalPlaylist];
+      }
     } else {
-      reorderedPlaylist = [...playlist];
+     
+      console.log(' Canción seleccionada de playlist existente');
     }
 
-    // Si shuffle estÃ¡ activo, usar la playlist mezclada
-    const finalPlaylist = this.isShuffleSubject.value ? this.shuffledPlaylist : reorderedPlaylist;
-    
     const playback: CurrentPlayback = {
       track,
       cover,
-      playlist: finalPlaylist,
+      playlist: [...this.currentOrderPlaylist],
       albumName
     };
     
@@ -85,23 +80,16 @@ export class MusicPlayerService {
     if (!current) return;
 
     if (newShuffleState) {
-      // Crear playlist mezclada excluyendo la canciÃ³n actual
-      const otherTracks = this.originalPlaylist.filter(t => t.id !== current.track.id);
-      this.shuffledPlaylist = [current.track, ...this.shuffleArray(otherTracks)];
-      current.playlist = this.shuffledPlaylist;
+      
+      this.currentOrderPlaylist = this.generateShuffledOrder(current.track, this.originalPlaylist);
+      console.log('Shuffle activado:', this.currentOrderPlaylist.map(t => t.name));
     } else {
-      // Volver a la playlist original reordenada desde la canciÃ³n actual
-      const currentIndex = this.originalPlaylist.findIndex(t => t.id === current.track.id);
-      if (currentIndex !== -1) {
-        current.playlist = [
-          ...this.originalPlaylist.slice(currentIndex),
-          ...this.originalPlaylist.slice(0, currentIndex)
-        ];
-      } else {
-        current.playlist = this.originalPlaylist;
-      }
+   
+      this.currentOrderPlaylist = [...this.originalPlaylist];
+      console.log('Orden original restaurado:', this.currentOrderPlaylist.map(t => t.name));
     }
 
+    current.playlist = [...this.currentOrderPlaylist];
     this.currentPlaybackSubject.next({...current});
   }
 
@@ -118,61 +106,161 @@ export class MusicPlayerService {
     }
     
     this.repeatModeSubject.next(newMode);
+    console.log('Repeat mode:', newMode);
   }
 
   playNext() {
     const current = this.currentPlaybackSubject.value;
-    if (!current) return;
+    if (!current || this.currentOrderPlaylist.length === 0) {
+      console.warn('No hay playlist o está vacía');
+      return;
+    }
 
     const repeatMode = this.repeatModeSubject.value;
     
     if (repeatMode === 'one') {
-      // Reiniciar la misma canciÃ³n
-      this.isPlayingSubject.next(false);
-      setTimeout(() => this.isPlayingSubject.next(true), 50);
+      console.log('Repeat One activo - no avanzar');
       return;
     }
 
-    // La canciÃ³n actual siempre es la primera en la playlist reordenada
-    if (current.playlist.length > 1) {
-      // Siguiente canciÃ³n (Ã­ndice 1)
-      const nextTrack = current.playlist[1];
+    const currentIndex = this.currentOrderPlaylist.findIndex(t => t.id === current.track.id);
+    
+    if (currentIndex === -1) {
+      console.error('Canción actual no encontrada en playlist');
+      console.log('Buscando:', current.track.id, current.track.name);
+      console.log('En playlist:', this.currentOrderPlaylist.map(t => `${t.id}-${t.name}`));
+      return;
+    }
+
+    console.log(`Next: índice actual ${currentIndex}/${this.currentOrderPlaylist.length - 1}`);
+    
+    if (currentIndex < this.currentOrderPlaylist.length - 1) {
+
+      const nextTrack = this.currentOrderPlaylist[currentIndex + 1];
       const nextCover = nextTrack.albumImage || current.cover;
-      this.setCurrentTrack(nextTrack, nextCover, current.playlist, current.albumName);
-    } else if (repeatMode === 'all' && current.playlist.length > 0) {
-      // Si solo hay una canciÃ³n y repeat all estÃ¡ activo, repetirla
-      const firstTrack = current.playlist[0];
+      
+      console.log('Reproduciendo:', nextTrack.name);
+      
+      current.track = nextTrack;
+      current.cover = nextCover;
+      
+      this.currentPlaybackSubject.next({...current});
+      this.isPlayingSubject.next(true);
+    } else if (repeatMode === 'all') {
+    
+      const firstTrack = this.currentOrderPlaylist[0];
       const firstCover = firstTrack.albumImage || current.cover;
-      this.setCurrentTrack(firstTrack, firstCover, current.playlist, current.albumName);
+      
+      console.log('Repeat All: volviendo al inicio ->', firstTrack.name);
+      
+      current.track = firstTrack;
+      current.cover = firstCover;
+      
+      this.currentPlaybackSubject.next({...current});
+      this.isPlayingSubject.next(true);
+    } else {
+      
+      console.log('Final de playlist - pausando');
+      this.isPlayingSubject.next(false);
     }
   }
 
+  
   playPrevious() {
     const current = this.currentPlaybackSubject.value;
-    if (!current || current.playlist.length === 0) return;
+    if (!current || this.currentOrderPlaylist.length === 0) {
+      console.warn('No hay playlist o está vacía');
+      return;
+    }
 
-    // Buscar la canciÃ³n actual en la playlist original
-    const currentIndexInOriginal = this.originalPlaylist.findIndex(t => t.id === current.track.id);
+    const currentIndex = this.currentOrderPlaylist.findIndex(t => t.id === current.track.id);
     
-    if (currentIndexInOriginal > 0) {
-      // Ir a la canciÃ³n anterior en la lista original
-      const prevTrack = this.originalPlaylist[currentIndexInOriginal - 1];
+    if (currentIndex === -1) {
+      console.error('Canción actual no encontrada en playlist');
+      return;
+    }
+
+    console.log(`Previous: índice actual ${currentIndex}/${this.currentOrderPlaylist.length - 1}`);
+    
+    if (currentIndex > 0) {
+     
+      const prevTrack = this.currentOrderPlaylist[currentIndex - 1];
       const prevCover = prevTrack.albumImage || current.cover;
-      this.setCurrentTrack(prevTrack, prevCover, this.originalPlaylist, current.albumName);
-    } else if (currentIndexInOriginal === 0) {
-      // Si estamos en la primera, ir a la Ãºltima (comportamiento circular)
-      const lastTrack = this.originalPlaylist[this.originalPlaylist.length - 1];
+      
+      console.log('Reproduciendo:', prevTrack.name);
+      
+      current.track = prevTrack;
+      current.cover = prevCover;
+      
+      this.currentPlaybackSubject.next({...current});
+      this.isPlayingSubject.next(true);
+    } else {
+      
+      const lastTrack = this.currentOrderPlaylist[this.currentOrderPlaylist.length - 1];
       const lastCover = lastTrack.albumImage || current.cover;
-      this.setCurrentTrack(lastTrack, lastCover, this.originalPlaylist, current.albumName);
+      
+      console.log('Circular: saltando a la última ->', lastTrack.name);
+      
+      current.track = lastTrack;
+      current.cover = lastCover;
+      
+      this.currentPlaybackSubject.next({...current});
+      this.isPlayingSubject.next(true);
     }
   }
 
-  private shuffleArray<T>(array: T[]): T[] {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
+ 
+  private generateShuffledOrder(currentTrack: Track, sourcePlaylist: Track[]): Track[] {
+   
+    const otherTracks = sourcePlaylist.filter(t => t.id !== currentTrack.id);
+
+    for (let i = otherTracks.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      [otherTracks[i], otherTracks[j]] = [otherTracks[j], otherTracks[i]];
     }
-    return shuffled;
+    
+    
+    const result = [currentTrack, ...otherTracks];
+    console.log('Orden shuffled generado:', result.map(t => t.name));
+    return result;
+  }
+
+  private removeDuplicates(tracks: Track[]): Track[] {
+    const seen = new Set<string>();
+    const unique = tracks.filter(track => {
+      if (seen.has(track.id)) {
+        return false;
+      }
+      seen.add(track.id);
+      return true;
+    });
+    
+    if (unique.length < tracks.length) {
+      console.log(`Eliminados ${tracks.length - unique.length} duplicados`);
+    }
+    
+    return unique;
+  }
+
+  private isPlaylistDifferent(newPlaylist: Track[]): boolean {
+  
+    if (this.originalPlaylist.length === 0) {
+      return true;
+    }
+    
+    if (this.originalPlaylist.length !== newPlaylist.length) {
+      return true;
+    }
+    
+    const originalIds = new Set(this.originalPlaylist.map(t => t.id));
+    const newIds = new Set(newPlaylist.map(t => t.id));
+    
+    for (const id of newIds) {
+      if (!originalIds.has(id)) {
+        return true;
+      }
+    }
+ 
+    return false;
   }
 }

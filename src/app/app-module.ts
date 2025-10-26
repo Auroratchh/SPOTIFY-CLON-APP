@@ -31,7 +31,7 @@ import { SearchSection } from './search/search-section/search-section';
   imports: [
     BrowserModule,
     CommonModule,
-    FormsModule,  // Para usar ngModel
+    FormsModule,  
     AppRoutingModule,
     SecondaryModule
   ],
