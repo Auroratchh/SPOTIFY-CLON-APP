@@ -15,8 +15,14 @@ import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 import { SecondaryModule } from './secondary/secondary-module';
 
+// Componentes de búsqueda
 import { SearchBar } from './search/search-bar/search-bar';
 import { SearchSection } from './search/search-section/search-section';
+import { TrackList } from './search/track-list/track-list';
+import { AlbumList } from './search/album-list/album-list';
+import { Loading } from './search/loading/loading';
+import { EmptySearchState } from './search/state/state';
+
 
 @NgModule({
   declarations: [
@@ -25,8 +31,13 @@ import { SearchSection } from './search/search-section/search-section';
     AudioController,
     Playlist,
     Player,
+    // Componentes de búsqueda
     SearchBar,
-    SearchSection
+    SearchSection,
+    TrackList,
+    AlbumList,
+    Loading,
+    EmptySearchState
   ],
   imports: [
     BrowserModule,

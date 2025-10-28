@@ -1,0 +1,25 @@
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 400px;
+    gap: 25px;
+    color: var(--text-secondary);
+}
+
+.empty-state i {
+    font-size: 5em;
+    opacity: 0.3;
+    color: var(--accent-wine);
+}
+
+.empty-state h2 {
+    color: var(--text-primary);
+    font-size: 2em;
+    font-weight: 600;
+}
+
+.empty-state p {
+    font-size: 1.2em;
+}

@@ -1,0 +1,134 @@
+.results-section {
+    padding: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    animation: fadeIn 0.6s ease-out;
+}
+
+.results-section h2 {
+    font-size: 1.8em;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.results-section h2 i {
+    color: var(--accent-wine-light);
+}
+
+.tracks-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.track-card {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    background: var(--bg-secondary);
+}
+
+.track-card:hover {
+    background: var(--hover-overlay);
+    border: 1px solid var(--accent-wine-light);
+    transform: translateX(5px);
+    box-shadow: 0 5px 20px rgba(139, 21, 56, 0.3);
+}
+
+.track-image {
+    width: 65px;
+    height: 65px;
+    border-radius: 10px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.track-no-image {
+    background: var(--accent-wine-dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.track-no-image i {
+    color: var(--accent-wine-light);
+    font-size: 1.5em;
+}
+
+.track-info {
+    flex: 1;
+    overflow: hidden;
+}
+
+.track-name {
+    font-size: 1.15em;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-artist {
+    font-size: 0.95em;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.play-btn {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-wine-dark), var(--accent-wine-light));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 21, 56, 0.4);
+    border: none;
+    cursor: pointer;
+}
+
+.track-card:hover .play-btn {
+    opacity: 1;
+}
+
+.play-btn:hover {
+    transform: scale(1.1);
+}
+
+.play-btn i {
+    color: var(--text-primary);
+    font-size: 1.1em;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .results-section {
+        padding: 20px;
+    }
+}

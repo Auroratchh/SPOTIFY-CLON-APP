@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { SpotifySearchService } from '../../services/spotify-api/spotify-search-services';
+import { SpotifyAlbumService } from '../../services/spotify-api/spotify-album-service';
 import { MusicPlayerService } from '../../services/general/music-player.service';
 import { Track } from '../../interfaces/track';
 import { Image } from '../../interfaces/image';
@@ -19,6 +20,7 @@ export class SearchSection {
 
   constructor(
     private _spotifySearch: SpotifySearchService,
+    private _spotifyAlbum: SpotifyAlbumService,
     private _musicPlayer: MusicPlayerService,
     private _router: Router
   ) {}
@@ -37,7 +39,7 @@ export class SearchSection {
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error en bÃºsqueda:', error);
+        console.error('Error en búsqueda:', error);
         this.isLoading = false;
         this.searchResults = null;
       }
@@ -45,7 +47,7 @@ export class SearchSection {
   }
 
   playTrack(track: any) {
-    console.log('PLAY TRACK');
+    console.log('=== PLAY TRACK ===');
     console.log('Track seleccionado:', track.name);
    
     const convertedTrack: Track = {
@@ -96,14 +98,56 @@ export class SearchSection {
       convertedTrack, 
       cover, 
       playlist, 
-      `${track.artists[0]?.name || 'Artista'} - ${track.album?.name || 'Ãlbum'}`
+      `${track.artists[0]?.name || 'Artista'} - ${track.album?.name || 'Álbum'}`
     );
 
- 
     this._router.navigate(['/']);
   }
 
   playAlbum(album: any) {
-    console.log('Reproducir Ã¡lbum:', album.name);
+    console.log('PLAY ALBUM');
+    console.log('Álbum seleccionado:', album.name);
+    
+    this.isLoading = true;
+
+    this._spotifyAlbum.getAlbum(album.id).subscribe({
+      next: (fullAlbum) => {
+        console.log('Álbum cargado:', fullAlbum.name);
+        console.log('Total de canciones:', fullAlbum.tracks.length);
+
+        if (fullAlbum.tracks.length === 0) {
+          console.warn('El álbum no tiene canciones');
+          this.isLoading = false;
+          return;
+        }
+
+        const albumCover: Image = fullAlbum.images[0] || {
+          width: 640,
+          heigth: 640,
+          url: ''
+        };
+
+        const albumTracks: Track[] = fullAlbum.tracks.map(track => ({
+          ...track,
+          albumImage: albumCover
+        }));
+
+        const firstTrack = albumTracks[0];
+
+        this._musicPlayer.setCurrentTrack(
+          firstTrack,
+          albumCover,
+          albumTracks,
+          `${album.artists[0]?.name || 'Artista'} - ${fullAlbum.name}`
+        );
+
+        this.isLoading = false;
+        this._router.navigate(['/']);
+      },
+      error: (error) => {
+        console.error('Error al cargar álbum:', error);
+        this.isLoading = false;
+      }
+    });
   }
 }

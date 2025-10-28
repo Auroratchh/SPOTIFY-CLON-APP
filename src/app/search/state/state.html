@@ -1,0 +1,15 @@
+@if (type() === 'initial') {
+    <div class="empty-state">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <h2>Busca tu música favorita</h2>
+        <p>Encuentra canciones, Álbumes y artistas en Spotify</p>
+    </div>
+}
+
+@if (type() === 'no-results') {
+    <div class="empty-state">
+        <i class="fa-solid fa-face-frown"></i>
+        <h2>No se encontraron resultados</h2>
+        <p>Intenta con otros términos de búsqueda</p>
+    </div>
+}
