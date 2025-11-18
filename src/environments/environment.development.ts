@@ -1,5 +1,3 @@
-import { spotify_environments } from "./environment.local";
-
 export const environment = {
     API_URL: 'https://api.spotify.com/v1',
     AUTH_API_URL: 'https://accounts.spotify.com/api/token',
