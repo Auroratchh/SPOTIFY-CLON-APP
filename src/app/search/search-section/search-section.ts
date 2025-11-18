@@ -47,7 +47,7 @@ export class SearchSection {
   }
 
   playTrack(track: any) {
-    console.log('=== PLAY TRACK ===');
+    console.log('PLAY TRACK');
     console.log('Track seleccionado:', track.name);
    
     const convertedTrack: Track = {

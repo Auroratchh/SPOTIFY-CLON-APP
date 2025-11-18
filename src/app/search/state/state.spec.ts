@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { State } from './state';
+import { EmptySearchState } from './state';
 
 describe('State', () => {
-  let component: State;
-  let fixture: ComponentFixture<State>;
+  let component: EmptySearchState;
+  let fixture: ComponentFixture<EmptySearchState>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [State]
+      declarations: [EmptySearchState]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(State);
+    fixture = TestBed.createComponent(EmptySearchState);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

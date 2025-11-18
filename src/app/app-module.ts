@@ -15,7 +15,6 @@ import { authInterceptor } from './interceptors/auth-interceptor';
 import { addAuthHeaderInterceptor } from './interceptors/core/add-auth-header-interceptor';
 import { SecondaryModule } from './secondary/secondary-module';
 
-// Componentes de búsqueda
 import { SearchBar } from './search/search-bar/search-bar';
 import { SearchSection } from './search/search-section/search-section';
 import { TrackList } from './search/track-list/track-list';
@@ -31,7 +30,6 @@ import { EmptySearchState } from './search/state/state';
     AudioController,
     Playlist,
     Player,
-    // Componentes de búsqueda
     SearchBar,
     SearchSection,
     TrackList,
